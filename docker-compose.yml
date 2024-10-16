@@ -1,0 +1,33 @@
+
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: task_management_db  # نام دیتابیس
+      POSTGRES_USER: postgres           # نام کاربری دیتابیس
+      POSTGRES_PASSWORD: 123  # رمز عبور برای دیتابیس
+    ports:
+      - "5432:5432"  # پورت دیتابیس
+    volumes:
+      - pgdata:/var/lib/postgresql/data  # نگهداری داده‌ها
+    networks:
+      - backend
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - backend
+
+volumes:
+  pgdata:
+
+networks:
+  backend:
